@@ -116,11 +116,11 @@ const PostCard = (props: IProps) => {
               <div className="d-flex justify-content-between mt-3">
                 <div className="d-flex">
                   <div className="image-container align-self-start">
-                    <img src={singlePost.user?.image} alt="" />
+                    <img src={singlePost.user[0]?.image} alt="" />
                   </div>
                   <div>
                     <Link
-                      to={"/user/" + singlePost.user?._id}
+                      to={"/user/" + singlePost.user[0]?._id}
                       className="post-profile-link"
                       style={{
                         lineHeight: "24px",
@@ -128,7 +128,9 @@ const PostCard = (props: IProps) => {
                         fontSize: "16px",
                       }}
                     >
-                      {singlePost.user?.name + " " + singlePost.user?.surname}
+                      {singlePost.user[0]?.name +
+                        " " +
+                        singlePost.user[0]?.surname}
                     </Link>
 
                     <p className="place" style={{ fontSize: "12px" }}>
@@ -137,7 +139,7 @@ const PostCard = (props: IProps) => {
                   </div>
                 </div>
 
-                {prof._id === singlePost.user?._id ? (
+                {prof._id === singlePost.user[0]?._id ? (
                   <>
                     <Dropdown className="drop-down align-self-start">
                       <Dropdown.Toggle

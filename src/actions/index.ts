@@ -15,7 +15,7 @@ export const fetchAllProfilesAction = () => {
   return async (dispatch: Dispatch) => {
     try {
       let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/profile/",
+        `https://striveschool-api.herokuapp.com/api/profile/`,
         {
           headers: {
             Authorization:
