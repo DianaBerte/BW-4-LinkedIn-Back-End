@@ -45,7 +45,7 @@ const StartPost = (props: IProps) => {
     try {
       let response = await fetch(`${process.env.REACT_APP_BE_URL}/posts/`, {
         method: "POST",
-        body: JSON.stringify({ text: postText }),
+        body: JSON.stringify({ text: postText, user: profile._id }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -72,10 +72,6 @@ const StartPost = (props: IProps) => {
         {
           method: "POST",
           body: formData,
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
         }
       );
       if (response.ok) {
