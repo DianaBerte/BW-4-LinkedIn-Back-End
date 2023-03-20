@@ -42,6 +42,7 @@ const PostCard = (props: IProps) => {
     idToEdit = id;
   };
   let prof = useAppSelector((state) => state.myProfile.results);
+  console.log("dd", prof);
   const post = useAppSelector((state) => state.posts.results);
   const isLiked = useAppSelector((state) => state.likes.results);
   const dispatch = useAppDispatch();
@@ -112,149 +113,155 @@ const PostCard = (props: IProps) => {
           .slice(0)
           .reverse()
           .map((singlePost) => (
-            <Col className="mt-3 sub-sections" xs={12} key={singlePost._id}>
-              <div className="d-flex justify-content-between mt-3">
-                <div className="d-flex">
-                  <div className="image-container align-self-start">
-                    <img src={singlePost.user[0]?.image} alt="" />
-                  </div>
-                  <div>
-                    <Link
-                      to={"/user/" + singlePost.user[0]?._id}
-                      className="post-profile-link"
-                      style={{
-                        lineHeight: "24px",
-                        fontWeight: "600",
-                        fontSize: "16px",
-                      }}
-                    >
-                      {singlePost.user[0]?.name +
-                        " " +
-                        singlePost.user[0]?.surname}
-                    </Link>
-
-                    <p className="place" style={{ fontSize: "12px" }}>
-                      {moment(singlePost.createdAt).fromNow()}
-                    </p>
-                  </div>
-                </div>
-
-                {prof._id === singlePost.user[0]?._id ? (
-                  <>
-                    <Dropdown className="drop-down align-self-start">
-                      <Dropdown.Toggle
-                        variant="secondary"
-                        id="dropdown-basic"
-                        size="sm"
-                        className="special-dropdown icons-bg-hover"
+            <>
+              <Col className="mt-3 sub-sections" xs={12} key={singlePost._id}>
+                <div className="d-flex justify-content-between mt-3">
+                  <div className="d-flex">
+                    <div className="image-container align-self-start">
+                      <img src={singlePost.user[0]?.image} alt="" />
+                    </div>
+                    <div>
+                      <Link
+                        to={"/user/" + singlePost.user[0]?._id}
+                        className="post-profile-link"
+                        style={{
+                          lineHeight: "24px",
+                          fontWeight: "600",
+                          fontSize: "16px",
+                        }}
                       >
-                        <ThreeDots color="black" />
-                      </Dropdown.Toggle>
+                        {singlePost.user[0]?.name +
+                          " " +
+                          singlePost.user[0]?.surname}
+                      </Link>
 
-                      <Dropdown.Menu className="special-dropdown-menu">
-                        <Dropdown.Item
-                          onClick={() => {
-                            handleShow(singlePost._id);
-                          }}
-                          style={{ fontWeight: "100", lineHeight: "2" }}
+                      <p className="place" style={{ fontSize: "12px" }}>
+                        {moment(singlePost.createdAt).fromNow()}
+                      </p>
+                    </div>
+                  </div>
+
+                  {prof._id === singlePost.user[0]?._id ? (
+                    <>
+                      <Dropdown className="drop-down align-self-start">
+                        <Dropdown.Toggle
+                          variant="secondary"
+                          id="dropdown-basic"
+                          size="sm"
+                          className="special-dropdown icons-bg-hover"
                         >
-                          Edit post
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          style={{ fontWeight: "100", lineHeight: "2" }}
-                          onClick={() => {
-                            dispatch(deletePost(singlePost._id));
-                            props.addedNewPost(true);
-                          }}
-                        >
-                          Delete post
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                    <Modal show={show} onHide={handleClose}>
-                      <Modal.Header closeButton>
-                        <Modal.Title>Edit Post</Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                        <Form.Group>
-                          <Form.Label
-                            className="place"
-                            style={{ backgroundColor: "white" }}
-                          >
-                            {" "}
-                            Edit your post
-                          </Form.Label>
-                          <Form.Control
-                            as="textarea"
-                            rows={5}
-                            value={editPost.text}
-                            onChange={(e) => {
-                              setEditPost({
-                                ...editPost,
-                                text: e.target.value,
-                              });
+                          <ThreeDots color="black" />
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu className="special-dropdown-menu">
+                          <Dropdown.Item
+                            onClick={() => {
+                              handleShow(singlePost._id);
                             }}
-                          />
-                          <Form.Control
-                            className="inputs"
-                            type="file"
-                            onChange={handleFileUpload}
-                          />
-                        </Form.Group>
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button
-                          variant="primary"
-                          onClick={(e) => {
-                            handleSubmit(e);
-                          }}
-                          style={{ fontSize: "14px" }}
-                          className="rounded-pill py-1 px-2"
-                        >
-                          Update
-                        </Button>
-                      </Modal.Footer>
-                    </Modal>
-                  </>
-                ) : (
-                  ""
-                )}
-              </div>
-              <p className="about">{singlePost.text}</p>
-              <div className="post-image-container">
-                {singlePost.image ? <img src={singlePost.image} alt="" /> : ""}
-              </div>
-              <hr />
-              <div className="d-flex justify-content-between mb-2">
-                <div className="about about-btn p-3" id="like">
-                  {isLiked.some(
-                    (likedPost) => likedPost._id === singlePost._id
-                  ) ? (
-                    <FontAwesomeIcon
-                      icon={liked}
-                      style={{ color: "rgb(92, 153, 214)" }}
-                      onClick={() =>
-                        dispatch(removeFromLikesAction(singlePost._id))
-                      }
-                    />
+                            style={{ fontWeight: "100", lineHeight: "2" }}
+                          >
+                            Edit post
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            style={{ fontWeight: "100", lineHeight: "2" }}
+                            onClick={() => {
+                              dispatch(deletePost(singlePost._id));
+                              props.addedNewPost(true);
+                            }}
+                          >
+                            Delete post
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                      <Modal show={show} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                          <Modal.Title>Edit Post</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <Form.Group>
+                            <Form.Label
+                              className="place"
+                              style={{ backgroundColor: "white" }}
+                            >
+                              {" "}
+                              Edit your post
+                            </Form.Label>
+                            <Form.Control
+                              as="textarea"
+                              rows={5}
+                              value={editPost.text}
+                              onChange={(e) => {
+                                setEditPost({
+                                  ...editPost,
+                                  text: e.target.value,
+                                });
+                              }}
+                            />
+                            <Form.Control
+                              className="inputs"
+                              type="file"
+                              onChange={handleFileUpload}
+                            />
+                          </Form.Group>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button
+                            variant="primary"
+                            onClick={(e) => {
+                              handleSubmit(e);
+                            }}
+                            style={{ fontSize: "14px" }}
+                            className="rounded-pill py-1 px-2"
+                          >
+                            Update
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
+                    </>
                   ) : (
-                    <FontAwesomeIcon
-                      icon={disliked}
-                      onClick={() => dispatch(addToLikesAction(singlePost))}
-                    />
+                    ""
                   )}
-                  Like
                 </div>
-                <div className="about about-btn p-3">
-                  {" "}
-                  <ChatRightText className="mr-1" /> Comment
+                <p className="about">{singlePost.text}</p>
+                <div className="post-image-container">
+                  {singlePost.image ? (
+                    <img src={singlePost.image} alt="" />
+                  ) : (
+                    ""
+                  )}
                 </div>
-                <div className="about about-btn p-3">
-                  {" "}
-                  <Share className="mr-1" /> Share{" "}
+                <hr />
+                <div className="d-flex justify-content-between mb-2">
+                  <div className="about about-btn p-3" id="like">
+                    {isLiked.some(
+                      (likedPost) => likedPost._id === singlePost._id
+                    ) ? (
+                      <FontAwesomeIcon
+                        icon={liked}
+                        style={{ color: "rgb(92, 153, 214)" }}
+                        onClick={() =>
+                          dispatch(removeFromLikesAction(singlePost._id))
+                        }
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={disliked}
+                        onClick={() => dispatch(addToLikesAction(singlePost))}
+                      />
+                    )}
+                    Like
+                  </div>
+                  <div className="about about-btn p-3">
+                    {" "}
+                    <ChatRightText className="mr-1" /> Comment
+                  </div>
+                  <div className="about about-btn p-3">
+                    {" "}
+                    <Share className="mr-1" /> Share{" "}
+                  </div>
                 </div>
-              </div>
-            </Col>
+              </Col>
+            </>
           ))
       ) : (
         <p>Loading...</p>
