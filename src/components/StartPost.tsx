@@ -43,18 +43,13 @@ const StartPost = (props: IProps) => {
 
   const createNewPost = async () => {
     try {
-      let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/",
-        {
-          method: "POST",
-          body: JSON.stringify({ text: postText }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
-        }
-      );
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/posts/`, {
+        method: "POST",
+        body: JSON.stringify({ text: postText }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (response.ok) {
         let post = await response.json();
         setNewPost(post);
@@ -73,7 +68,7 @@ const StartPost = (props: IProps) => {
       console.log(newPost);
       console.log(newPost._id);
       let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/" + newPost._id,
+        `${process.env.REACT_APP_BE_URL}/posts/${newPost._id}/image`,
         {
           method: "POST",
           body: formData,

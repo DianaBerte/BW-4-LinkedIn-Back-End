@@ -89,14 +89,10 @@ const PostCard = (props: IProps) => {
       const formData = new FormData();
       formData.append("post", file);
       let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/" + postId,
+        `${process.env.REACT_APP_BE_URL}/posts/${postId}/image`,
         {
           method: "POST",
           body: formData,
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
         }
       );
       if (response.ok) {
@@ -120,11 +116,11 @@ const PostCard = (props: IProps) => {
               <div className="d-flex justify-content-between mt-3">
                 <div className="d-flex">
                   <div className="image-container align-self-start">
-                    <img src={singlePost.user.image} alt="vh" />
+                    <img src={singlePost.user?.image} alt="" />
                   </div>
                   <div>
                     <Link
-                      to={"/user/" + singlePost.user._id}
+                      to={"/user/" + singlePost.user?._id}
                       className="post-profile-link"
                       style={{
                         lineHeight: "24px",
@@ -132,11 +128,8 @@ const PostCard = (props: IProps) => {
                         fontSize: "16px",
                       }}
                     >
-                      {singlePost.username}
+                      {singlePost.user?.name + " " + singlePost.user?.surname}
                     </Link>
-                    <p style={{ fontSize: "12px" }} className="place mb-n1">
-                      {singlePost.user.title}
-                    </p>
 
                     <p className="place" style={{ fontSize: "12px" }}>
                       {moment(singlePost.createdAt).fromNow()}
@@ -144,7 +137,7 @@ const PostCard = (props: IProps) => {
                   </div>
                 </div>
 
-                {prof._id === singlePost.user._id ? (
+                {prof._id === singlePost.user?._id ? (
                   <>
                     <Dropdown className="drop-down align-self-start">
                       <Dropdown.Toggle

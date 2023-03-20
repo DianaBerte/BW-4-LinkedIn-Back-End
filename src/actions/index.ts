@@ -267,19 +267,12 @@ export const editBioAction = (about: { bio: string }) => {
 export const fetchPostsAction = () => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/",
-        {
-          method: "GET",
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
-        }
-      );
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/posts`);
       if (response.ok) {
         let post = await response.json();
-        const posts = post.slice(-20) as IAllPosts[];
+        console.log(post);
+        const posts = post.posts.slice(-20) as IAllPosts[];
+        // const posts = post.posts as IAllPosts[];
         dispatch({ type: GET_POST, payload: posts });
       } else {
         console.log("Error");
@@ -294,14 +287,9 @@ export const deletePost = (id: string) => {
   return async (dispatch: Dispatch) => {
     try {
       let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/" + id,
+        `${process.env.REACT_APP_BE_URL}/posts/` + id,
         {
           method: "DELETE",
-
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
         }
       );
 
@@ -333,14 +321,12 @@ export const editPostAction = (editPost: { text: string }, id: string) => {
   return async (dispatch: Dispatch) => {
     try {
       let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/" + id,
+        `${process.env.REACT_APP_BE_URL}/posts/` + id,
         {
           method: "PUT",
           body: JSON.stringify(editPost),
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
           },
         }
       );
