@@ -14,18 +14,11 @@ export const SEARCH_PROFILE = "SEARCH_PROFILE";
 export const fetchAllProfilesAction = () => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(
-        `https://striveschool-api.herokuapp.com/api/profile/`,
-        {
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
-        }
-      );
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
 
       if (response.ok) {
         let profiles = await response.json();
+        console.log("p", profiles);
         dispatch({
           type: GET_ALL_PROFILES,
           payload: profiles,
@@ -134,19 +127,9 @@ export const deleteJobAction = (id: string) => {
 export const fetchMyProfileAction = () => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/profile/me",
-        {
-          method: "GET",
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
-        }
-      );
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
       if (response.ok) {
-        let myProfile = await response.json();
-        // console.log(myProfile);
+        let myProfile = (await response.json())[0];
 
         dispatch({ type: GET_MY_PROFILE, payload: myProfile });
       } else {
