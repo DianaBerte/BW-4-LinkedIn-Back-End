@@ -54,7 +54,7 @@ const Profile = () => {
       formData.append("image", file);
 
       let response = await fetch(
-        `${process.env.REACT_APP_BE_URL}/:userId/image`,
+        `${process.env.REACT_APP_BE_URL}/users/${id}/image`,
         {
           method: "POST",
           body: formData,
