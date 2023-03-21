@@ -36,17 +36,12 @@ export const fetchExperienceAction = () => {
   return async (dispatch: Dispatch) => {
     try {
       let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/profile/63f36ff58381fc0013fffadf/experiences",
-        {
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
-        }
+        `${process.env.REACT_APP_BE_URL}/:userId/experiences`
       );
 
       if (response.ok) {
         let exp = await response.json();
+        console.log("exp", exp);
         dispatch({
           type: GET_EXPERIENCE,
           payload: exp,
@@ -72,14 +67,12 @@ export const postJobAction = (job: {
   return async (dispatch: Dispatch) => {
     try {
       let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/profile/63f36ff58381fc0013fffadf/experiences",
+        `${process.env.REACT_APP_BE_URL}/:userId/experiences`,
         {
           method: "POST",
           body: JSON.stringify(job),
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
           },
         }
       );

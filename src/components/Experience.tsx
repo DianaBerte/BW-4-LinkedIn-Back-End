@@ -46,6 +46,9 @@ const Experience = () => {
   const [showDescription, setShowDescription] = useState(false);
   const [showLoc, setShowLoc] = useState(false);
   let exp = useAppSelector((state) => state.experience.results);
+  console.log("exp", exp);
+  let profile = useAppSelector((state) => state.myProfile.results);
+  console.log(profile);
 
   const dispatch = useAppDispatch();
 
@@ -415,7 +418,7 @@ const Experience = () => {
           </div>
 
           <ListGroup className="mt-4 list-exp ">
-            {exp.map((ex: IExperience) => (
+            {profile.experiences?.map((ex: IExperience) => (
               <>
                 <ListGroup.Item key={ex._id} className="pt-2 experience">
                   <div
