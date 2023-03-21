@@ -17,13 +17,12 @@ const Sidebar = () => {
   const [toggleCards, setToggleCards] = useState(false);
   const [toggleCards1, setToggleCards1] = useState(false);
   const profiles = useAppSelector((state) => state.allProfiles.results);
-  console.log("pro", profiles);
+
   const dispatch = useAppDispatch();
   const [numbers, setNumbers] = useState<number[]>([]);
   const uniqueProfiles = useAppSelector(
     (state) => state.uniqueProfiles.results
   );
-  console.log("u", uniqueProfiles);
 
   const uniqueProfile = () => {
     const uniqueProfilesArray: IProfile[] = [];

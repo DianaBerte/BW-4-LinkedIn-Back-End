@@ -18,7 +18,7 @@ export const fetchAllProfilesAction = () => {
 
       if (response.ok) {
         let profiles = await response.json();
-        console.log("p", profiles);
+
         dispatch({
           type: GET_ALL_PROFILES,
           payload: profiles,
@@ -35,19 +35,26 @@ export const fetchAllProfilesAction = () => {
 export const fetchExperienceAction = () => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(
-        `${process.env.REACT_APP_BE_URL}/:userId/experiences`
-      );
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      if (res.ok) {
+        let users = await res.json();
 
-      if (response.ok) {
-        let exp = await response.json();
-        console.log("exp", exp);
-        dispatch({
-          type: GET_EXPERIENCE,
-          payload: exp,
-        });
-      } else {
-        console.log("Error");
+        const idOfFirstUser: string = users[0]._id;
+
+        let response = await fetch(
+          `${process.env.REACT_APP_BE_URL}/users/${idOfFirstUser}/experiences`
+        );
+
+        if (response.ok) {
+          let exp = await response.json();
+
+          dispatch({
+            type: GET_EXPERIENCE,
+            payload: exp,
+          });
+        } else {
+          console.log("Error");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -66,23 +73,31 @@ export const postJobAction = (job: {
 }) => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(
-        `${process.env.REACT_APP_BE_URL}/:userId/experiences`,
-        {
-          method: "POST",
-          body: JSON.stringify(job),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      if (res.ok) {
+        let users = await res.json();
 
-      if (response.ok) {
-        console.log("posted");
-        let data = response.json();
-        return data;
-      } else {
-        console.log("Error");
+        const idOfFirstUser: string = users[0]._id;
+        console.log(idOfFirstUser);
+        let response = await fetch(
+          `${process.env.REACT_APP_BE_URL}/users/${idOfFirstUser}/experiences`,
+          {
+            method: "POST",
+            body: JSON.stringify(job),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          console.log("posted");
+          let data = await response.json();
+
+          return data;
+        } else {
+          console.log("Error");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -93,23 +108,24 @@ export const postJobAction = (job: {
 export const deleteJobAction = (id: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/profile/63f36ff58381fc0013fffadf/experiences/" +
-          id,
-        {
-          method: "DELETE",
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      if (res.ok) {
+        let users = await res.json();
 
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
+        const idOfFirstUser: string = users[0]._id;
+        console.log(idOfFirstUser);
+        let response = await fetch(
+          `${process.env.REACT_APP_BE_URL}/users/${idOfFirstUser}/experiences/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (response.ok) {
+          console.log("deleted");
+        } else {
+          alert("Error");
         }
-      );
-
-      if (response.ok) {
-        console.log("deleted");
-      } else {
-        alert("Error");
       }
     } catch (error) {
       console.log(error);
@@ -155,25 +171,28 @@ export const editJobAction = (
 ) => {
   return async (dispatch: Dispatch) => {
     try {
-      // console.log(id);
-      let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/profile/63f36ff58381fc0013fffadf/experiences/" +
-          id,
-        {
-          method: "PUT",
-          body: JSON.stringify(job),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      if (res.ok) {
+        let users = await res.json();
+
+        const idOfFirstUser: string = users[0]._id;
+        console.log(idOfFirstUser);
+        let response = await fetch(
+          `${process.env.REACT_APP_BE_URL}/${idOfFirstUser}/experiences/${id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(job),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.ok) {
+          // let data = await response.json();
+          console.log("edited");
+        } else {
+          alert("Error");
         }
-      );
-      if (response.ok) {
-        // let data = await response.json();
-        console.log("edited");
-      } else {
-        alert("Error");
       }
     } catch (error) {
       console.log(error);
@@ -190,23 +209,26 @@ export const editMyProfileAction = (editProfile: {
 }) => {
   return async (dispatch: Dispatch) => {
     try {
-      //   dispatch({ type: GET_MY_PROFILE, payload: myProfile });
-      //
-      let response = await fetch(
-        `${process.env.REACT_APP_BE_URL}/users/6418365c22034f5570d79056`,
-        {
-          method: "PUT",
-          body: JSON.stringify(editProfile),
-          headers: {
-            "Content-Type": "application/json",
-          },
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      if (res.ok) {
+        let users = await res.json();
+
+        const idOfFirstUser: string = users[0]._id;
+        let response = await fetch(
+          `${process.env.REACT_APP_BE_URL}/users/${idOfFirstUser}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(editProfile),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.ok) {
+          console.log("Edited");
+        } else {
+          alert("Error");
         }
-      );
-      if (response.ok) {
-        // let data = await response.json();
-        console.log("Edited");
-      } else {
-        alert("Error");
       }
     } catch (error) {
       console.log(error);

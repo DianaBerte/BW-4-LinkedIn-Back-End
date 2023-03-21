@@ -46,9 +46,6 @@ const Experience = () => {
   const [showDescription, setShowDescription] = useState(false);
   const [showLoc, setShowLoc] = useState(false);
   let exp = useAppSelector((state) => state.experience.results);
-  console.log("exp", exp);
-  let profile = useAppSelector((state) => state.myProfile.results);
-  console.log(profile);
 
   const dispatch = useAppDispatch();
 
@@ -87,6 +84,7 @@ const Experience = () => {
   ) => {
     e.preventDefault();
     setChanged(true);
+    console.log("file", file);
     if (file) {
       handleImageUpload(file, expToEdit, userID);
     }
@@ -103,10 +101,11 @@ const Experience = () => {
   ) => {
     try {
       const formData = new FormData();
-      formData.append("experience", file);
+      formData.append("image", file);
 
       let response = await fetch(
-        `https://striveschool-api.herokuapp.com/api/profile/${userID}/experiences/${expId}/picture`,
+        // ``
+        `${process.env.REACT_APP_BE_URL}/users/${userID}/experiences/${expId}/image`,
 
         {
           method: "POST",
@@ -179,7 +178,9 @@ const Experience = () => {
     setShowLoc(false);
 
     let newexp = await dispatch(postJobAction(job));
-    newexpID = newexp._id;
+    // data.
+
+    newexpID = newexp.experiences.slice(-1)[0]._id;
     if (file) {
       NewExpImageUpload(fileForNewExp, newexpID, userID);
     }
@@ -195,21 +196,16 @@ const Experience = () => {
   ) => {
     try {
       const formData = new FormData();
-      formData.append("experience", fileForNewExp);
+      formData.append("image", fileForNewExp);
 
       let response = await fetch(
-        `https://striveschool-api.herokuapp.com/api/profile/${userID}/experiences/${newexpID}/picture`,
-
+        `${process.env.REACT_APP_BE_URL}/users/${userID}/experiences/${newexpID}/image`,
         {
           method: "POST",
           body: formData,
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
         }
       );
-      console.log(response);
+
       if (response.ok) {
         console.log("You made it!");
       } else {
@@ -418,7 +414,7 @@ const Experience = () => {
           </div>
 
           <ListGroup className="mt-4 list-exp ">
-            {profile.experiences?.map((ex: IExperience) => (
+            {exp?.map((ex: IExperience) => (
               <>
                 <ListGroup.Item key={ex._id} className="pt-2 experience">
                   <div
@@ -444,16 +440,7 @@ const Experience = () => {
                       >
                         {ex.company}
                       </p>
-                      <p
-                        className="place mb-0"
-                        style={{ paddingInline: "10px" }}
-                      >
-                        {" "}
-                        {format(parseISO(ex.startDate), "MMMM, yyyy")} -{" "}
-                        {ex.endDate === null || ex.endDate === undefined
-                          ? "Present"
-                          : format(parseISO(ex.endDate), "MMMM, yyyy")}
-                      </p>
+
                       <p
                         className="place mb-0"
                         style={{ paddingInline: "10px" }}
