@@ -126,16 +126,11 @@ const SearchProfile = () => {
   const getExperiences = async () => {
     try {
       let response = await fetch(
-        `https://striveschool-api.herokuapp.com/api/profile/${params.id}/experiences`,
-        {
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
-        }
+        `${process.env.REACT_APP_BE_URL}/users/${params.id}/experiences`
       );
       if (response.ok) {
         let experiences = await response.json();
+        console.log(experiences)
         setExp(experiences);
       } else {
         console.log("error");
