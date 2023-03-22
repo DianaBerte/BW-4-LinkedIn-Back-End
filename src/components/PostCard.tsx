@@ -3,7 +3,7 @@ import { ChatRightText, Share, ThreeDots } from "react-bootstrap-icons";
 import { useEffect } from "react";
 
 import {
-  addToLikesAction,
+  // addToLikesAction,
   editPostAction,
   fetchPostsAction,
   removeFromLikesAction,
@@ -31,6 +31,8 @@ const PostCard = (props: IProps) => {
   const [editPost, setEditPost] = useState({
     text: "",
   });
+  const [likes, setLikes] = useState({ post: {}, numberOfLikes: Number });
+  // const [isLikedd, setIsLikedd] = useState(false);
 
   const handleClose = () => setShow(false);
 
@@ -44,10 +46,59 @@ const PostCard = (props: IProps) => {
   let prof = useAppSelector((state) => state.myProfile.results);
 
   const post = useAppSelector((state) => state.posts.results);
+
   const isLiked = useAppSelector((state) => state.likes.results);
   const dispatch = useAppDispatch();
   const [file, setFile] = useState<File | null>(null);
+  // const handleLike = async (singlePost) => {
+  //     try {
+  //       const res = await fetch(`${process.env.REACT_APP_BE_URL}/posts/${singlePost._id}/like`, {
+  //         method: "PUT",
+  //         body: JSON.stringify({_id: profileDataID}),
+  //         headers: {"Content-Type": "application/json"}
+  //       })
+  //       if (res.ok) {
+  //         const data = await res.json()
+  //         console.log(data)
+  //         setIsLiked(data.isLiked)
+  //         setLikes(data.totalLikes)
+  //         dispatch(getAllPosts())
+  //       }
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   };
 
+  const addToLikesAction = async (like: any, userId: string) => {
+    try {
+      let response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/posts/${like._id}/like`,
+        {
+          method: "POST",
+          body: JSON.stringify({ userId: userId }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("liked");
+        let likesss = await response.json();
+        console.log(likesss);
+        setLikes(likesss);
+        // console.log("likes", likes);
+        // return {
+        //   type: ADD_TO_LIKES,
+        //   payload: like,
+        // };
+      } else {
+        alert("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     dispatch(fetchPostsAction());
     setTimeout(() => {
@@ -246,7 +297,7 @@ const PostCard = (props: IProps) => {
                     ) : (
                       <FontAwesomeIcon
                         icon={disliked}
-                        onClick={() => dispatch(addToLikesAction(singlePost))}
+                        onClick={() => addToLikesAction(singlePost, prof._id)}
                       />
                     )}
                     Like

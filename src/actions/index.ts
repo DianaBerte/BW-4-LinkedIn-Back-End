@@ -305,10 +305,35 @@ export const deletePost = (id: string) => {
     }
   };
 };
-export const addToLikesAction = (like: any) => {
-  return {
-    type: ADD_TO_LIKES,
-    payload: like,
+export const addToLikesAction = (like: any, userId: string) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      let response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/posts/${like._id}/like`,
+        {
+          method: "POST",
+          body: JSON.stringify({ userId: userId }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("liked");
+        let likesss = await response.json();
+        console.log(likesss);
+        return likesss;
+        // return {
+        //   type: ADD_TO_LIKES,
+        //   payload: like,
+        // };
+      } else {
+        alert("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 };
 
