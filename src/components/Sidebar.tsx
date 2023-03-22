@@ -48,7 +48,7 @@ const Sidebar = () => {
   const generateRandomNumbers = () => {
     const newNumbers: number[] = [];
     while (newNumbers.length < 20) {
-      const randomNumber = Math.floor(Math.random() * 25);
+      const randomNumber = Math.floor(Math.random() * 25 + 1);
       if (!newNumbers.includes(randomNumber)) {
         newNumbers.push(randomNumber);
       }
