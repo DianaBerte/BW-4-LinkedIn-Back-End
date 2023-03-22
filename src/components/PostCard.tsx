@@ -42,7 +42,7 @@ const PostCard = (props: IProps) => {
     idToEdit = id;
   };
   let prof = useAppSelector((state) => state.myProfile.results);
-  console.log("dd", prof);
+
   const post = useAppSelector((state) => state.posts.results);
   const isLiked = useAppSelector((state) => state.likes.results);
   const dispatch = useAppDispatch();

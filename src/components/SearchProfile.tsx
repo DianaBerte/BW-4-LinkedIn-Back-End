@@ -45,7 +45,7 @@ const SearchProfile = () => {
   const generateRandomNumbers = () => {
     const newNumbers: number[] = [];
     while (newNumbers.length < 20) {
-      const randomNumber = Math.floor(Math.random() * 101);
+      const randomNumber = Math.floor(Math.random() * 25 + 1);
       if (!newNumbers.includes(randomNumber)) {
         newNumbers.push(randomNumber);
       }
@@ -90,6 +90,7 @@ const SearchProfile = () => {
   };
 
   const params = useParams();
+  console.log(params);
   const [prof, setProf] = useState<any>();
   const [exp, setExp] = useState<any>();
 
@@ -108,16 +109,11 @@ const SearchProfile = () => {
   const getProfile = async () => {
     try {
       let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/profile/" + params.id,
-        {
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
-        }
+        `${process.env.REACT_APP_BE_URL}/users/${params.id}`
       );
       if (response.ok) {
         let profile = await response.json();
+        console.log(profile);
         setProf(profile);
       } else {
         console.log("Error");
@@ -346,18 +342,18 @@ const SearchProfile = () => {
                     <div key={i}>
                       <div className={getClassName1(i)}>
                         <div className="image-container">
-                          <img src={profile.image} alt="" />
+                          <img src={profile?.image} alt="" />
                         </div>
                         <div>
                           <Link
                             className="username truncate2"
-                            to={"/user/" + profile._id}
+                            to={"/user/" + profile?._id}
                           >
-                            {profile.name} {profile.surname}
+                            {profile?.name} {profile?.surname}
                           </Link>{" "}
                           <span> • 2nd</span>
                           <p className="profession truncate3">
-                            {profile.title}
+                            {profile?.title}
                           </p>
                           <Button variant="outline-secondary">
                             <svg
@@ -434,20 +430,20 @@ const SearchProfile = () => {
                       <div key={i}>
                         <div className={getClassName(i)}>
                           <div className="image-container">
-                            <img src={profile.image} alt="" />
+                            <img src={profile?.image} alt="" />
                           </div>
                           <div>
                             <div className="d-flex align-items-center">
                               <Link
                                 className="username truncate2"
-                                to={"/user/" + profile._id}
+                                to={"/user/" + profile?._id}
                               >
-                                {profile.name} {profile.surname}
+                                {profile?.name} {profile?.surname}
                               </Link>
                               <span className="ml-1"> • 2nd</span>
                             </div>
                             <p className="profession truncate3">
-                              {profile.title}
+                              {profile?.title}
                             </p>
                             <Button variant="outline-secondary">
                               <svg

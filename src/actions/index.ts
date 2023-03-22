@@ -178,7 +178,7 @@ export const editJobAction = (
         const idOfFirstUser: string = users[0]._id;
         console.log(idOfFirstUser);
         let response = await fetch(
-          `${process.env.REACT_APP_BE_URL}/${idOfFirstUser}/experiences/${id}`,
+          `${process.env.REACT_APP_BE_URL}/users/${idOfFirstUser}/experiences/${id}`,
           {
             method: "PUT",
             body: JSON.stringify(job),
@@ -239,22 +239,26 @@ export const editMyProfileAction = (editProfile: {
 export const editBioAction = (about: { bio: string }) => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/profile/",
-        {
-          method: "PUT",
-          body: JSON.stringify(about),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
-        }
-      );
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
       if (response.ok) {
-        console.log("Edited");
+        let myProfile = (await response.json())[0];
+        let res = await fetch(
+          `${process.env.REACT_APP_BE_URL}/users/${myProfile._id}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(about),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (res.ok) {
+          console.log("Edited");
+        } else {
+          alert("Error");
+        }
       } else {
-        alert("Error");
+        console.log("Error");
       }
     } catch (error) {
       console.log(error);
