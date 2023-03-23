@@ -85,6 +85,7 @@ const PostCard = (props: IProps) => {
 
   const post = useAppSelector((state) => state.posts.results);
   const allUsers = useAppSelector((state) => state.allProfiles.results);
+  console.log(allUsers);
 
   const [numberOfLikes, setNumberOfLikes] = useState(0);
 
