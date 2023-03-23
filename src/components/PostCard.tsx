@@ -1,4 +1,13 @@
-import { Row, Col, Dropdown, Modal, Button, Form } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Dropdown,
+  Modal,
+  Button,
+  Form,
+  ListGroup,
+  ListGroupItem,
+} from "react-bootstrap";
 import { ChatRightText, Share, ThreeDots } from "react-bootstrap-icons";
 import { useEffect } from "react";
 
@@ -35,8 +44,12 @@ const PostCard = (props: IProps) => {
   const [likes, setLikes] = useState({ post: {}, numberOfLikes: Number });
   const [changed, setChanged] = useState(false);
   // const [isLikedd, setIsLikedd] = useState(false);
+  const [comment, setComment] = useState({ comm: "" });
 
   const handleClose = () => setShow(false);
+  const submitComment = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault();
+  };
 
   const handleShow = (id: string) => {
     const found = post.find((p: IPost) => p._id === id);
@@ -48,6 +61,8 @@ const PostCard = (props: IProps) => {
   let prof = useAppSelector((state) => state.myProfile.results);
 
   const post = useAppSelector((state) => state.posts.results);
+  const allUsers = useAppSelector((state) => state.allProfiles.results);
+
   const [numberOfLikes, setNumberOfLikes] = useState(0);
 
   const isLiked = useAppSelector((state) => state.likes.results);
@@ -178,6 +193,7 @@ const PostCard = (props: IProps) => {
           .reverse()
           .map((singlePost) => (
             <>
+              {console.log(singlePost)}
               <Col className="mt-3 sub-sections" xs={12} key={singlePost._id}>
                 <div className="d-flex justify-content-between mt-3">
                   <div className="d-flex">
@@ -320,6 +336,36 @@ const PostCard = (props: IProps) => {
                     <Share className="mr-1" /> Share{" "}
                   </div>
                 </div>
+
+                <Form>
+                  <Form.Group className="mb-3">
+                    <Form.Control
+                      type="text"
+                      placeholder="Comment"
+                      onChange={(e) => {
+                        setComment({
+                          ...comment,
+                          comm: e.target.value,
+                        });
+                      }}
+                    />
+                  </Form.Group>
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    onClick={submitComment}
+                  >
+                    Submit
+                  </Button>
+                </Form>
+
+                <ListGroup>
+                  {singlePost.comments.map(
+                    (c: { _id: String; comment: String }) => (
+                      <ListGroupItem>{c.comment}</ListGroupItem>
+                    )
+                  )}
+                </ListGroup>
               </Col>
             </>
           ))
