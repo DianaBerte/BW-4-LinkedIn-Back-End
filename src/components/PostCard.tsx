@@ -48,33 +48,30 @@ const PostCard = (props: IProps) => {
 
   const handleClose = () => setShow(false);
   const submitComment = async (id: String) => {
-
     try {
-     
-        let response = await fetch(
-          `${process.env.REACT_APP_BE_URL}/posts/${id}/comments`,
-          {
-            method: "POST",
-            body: JSON.stringify({ comment: comment.comm, user: prof._id }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.ok) {
-          console.log("posted");
-          let data = await response.json();
-
-          return data;
-        } else {
-          console.log("Error");
+      let response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/posts/${id}/comments`,
+        {
+          method: "POST",
+          body: JSON.stringify({ comment: comment.comm, user: prof._id }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
+      );
+
+      if (response.ok) {
+        console.log("posted");
+        let data = await response.json();
+        dispatch(fetchPostsAction());
+
+        return data;
+      } else {
+        console.log("Error");
       }
-     catch (error) {
+    } catch (error) {
       console.log(error);
     }
-
   };
 
   const handleShow = (id: string) => {
@@ -379,7 +376,7 @@ const PostCard = (props: IProps) => {
                   <Button
                     variant="primary"
                     type="submit"
-                    onClick={(e: React.MouseEvent<HTMLElement, MouseEvent> ) => {
+                    onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
                       e.preventDefault();
                       submitComment(singlePost._id);
                     }}
