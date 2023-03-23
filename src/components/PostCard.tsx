@@ -6,7 +6,7 @@ import {
   // addToLikesAction,
   editPostAction,
   fetchPostsAction,
-  removeFromLikesAction,
+  // removeFromLikesAction,
 } from "../actions";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 
@@ -31,7 +31,9 @@ const PostCard = (props: IProps) => {
   const [editPost, setEditPost] = useState({
     text: "",
   });
+
   const [likes, setLikes] = useState({ post: {}, numberOfLikes: Number });
+  const [changed, setChanged] = useState(false);
   // const [isLikedd, setIsLikedd] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -46,6 +48,7 @@ const PostCard = (props: IProps) => {
   let prof = useAppSelector((state) => state.myProfile.results);
 
   const post = useAppSelector((state) => state.posts.results);
+  const [numberOfLikes, setNumberOfLikes] = useState(0);
 
   const isLiked = useAppSelector((state) => state.likes.results);
   const dispatch = useAppDispatch();
@@ -87,6 +90,9 @@ const PostCard = (props: IProps) => {
         let likesss = await response.json();
         console.log(likesss);
         setLikes(likesss);
+        setNumberOfLikes(likes?.numberOfLikes);
+        setChanged(true);
+
         // console.log("likes", likes);
         // return {
         //   type: ADD_TO_LIKES,
@@ -101,12 +107,19 @@ const PostCard = (props: IProps) => {
   };
   useEffect(() => {
     dispatch(fetchPostsAction());
+
     setTimeout(() => {
       props.addedNewPost(false);
     }, 5000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, props.reloadPosts]);
-
+  useEffect(() => {
+    dispatch(fetchPostsAction());
+    setTimeout(() => {
+      setChanged(false);
+    }, 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changed]);
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(fetchPostsAction());
@@ -283,16 +296,12 @@ const PostCard = (props: IProps) => {
                 </div>
                 <hr />
                 <div className="d-flex justify-content-between mb-2">
-                  <div className="about about-btn p-3" id="like">
-                    {isLiked.some(
-                      (likedPost) => likedPost._id === singlePost._id
-                    ) ? (
+                  <div className="about about-btn p-3">
+                    {singlePost.likes.includes(prof._id) ? (
                       <FontAwesomeIcon
                         icon={liked}
                         style={{ color: "rgb(92, 153, 214)" }}
-                        onClick={() =>
-                          dispatch(removeFromLikesAction(singlePost._id))
-                        }
+                        onClick={() => addToLikesAction(singlePost, prof._id)}
                       />
                     ) : (
                       <FontAwesomeIcon
@@ -300,7 +309,7 @@ const PostCard = (props: IProps) => {
                         onClick={() => addToLikesAction(singlePost, prof._id)}
                       />
                     )}
-                    Like
+                    {singlePost.likes.length} Like
                   </div>
                   <div className="about about-btn p-3">
                     {" "}

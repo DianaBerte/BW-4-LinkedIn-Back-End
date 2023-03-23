@@ -273,6 +273,7 @@ export const fetchPostsAction = () => {
       if (response.ok) {
         let post = await response.json();
         console.log(post);
+
         const posts = post.posts.slice(-20) as IAllPosts[];
         // const posts = post.posts as IAllPosts[];
         dispatch({ type: GET_POST, payload: posts });
