@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { fetchAllProfilesAction, setUniqueProfilesAction } from "../actions";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import React from "react";
+import axios from "axios";
 
 import { IProfile } from "../interfaces/IProfile";
 import { format, parseISO } from "date-fns";
@@ -20,6 +21,30 @@ const SearchProfile = () => {
   const uniqueProfiles = useAppSelector(
     (state) => state.uniqueProfiles.results
   );
+  const [csvData, setCsvData] = useState(null);
+  function handleDownload() {
+    if (csvData) {
+      const blob = new Blob([csvData], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "data.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+  function handleFetch() {
+    axios
+      .get(`${process.env.REACT_APP_BE_URL}/users/${params.id}/experiences/csv`)
+      .then((response) => {
+        setCsvData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   const uniqueProfile = () => {
     const uniqueProfilesArray: IProfile[] = [];
@@ -90,7 +115,7 @@ const SearchProfile = () => {
   };
 
   const params = useParams();
-  console.log(params);
+
   const [prof, setProf] = useState<any>();
   const [exp, setExp] = useState<any>();
 
@@ -130,7 +155,7 @@ const SearchProfile = () => {
       );
       if (response.ok) {
         let experiences = await response.json();
-        console.log(experiences)
+        console.log(experiences);
         setExp(experiences);
       } else {
         console.log("error");
@@ -246,6 +271,30 @@ const SearchProfile = () => {
                   style={{ paddingInline: "15px" }}
                 >
                   <h4 className="name pt-4 mb-n1 px-2">Experience</h4>
+                  <div>
+                    {" "}
+                    <div className="d-flex" style={{ gap: "5px" }}>
+                      <Button
+                        style={{ fontSize: "8px" }}
+                        onClick={handleFetch}
+                        variant="outline-dark"
+                        className="btn-small"
+                      >
+                        Fetch CSV
+                      </Button>
+
+                      {csvData && (
+                        <Button
+                          style={{ fontSize: "8px" }}
+                          onClick={handleDownload}
+                          variant="outline-dark"
+                          className="btn-small"
+                        >
+                          Download CSV
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 <ListGroup className="mt-4 list-exp ">

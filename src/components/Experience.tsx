@@ -1,5 +1,6 @@
 import React from "react";
-import { CSVLink } from "react-csv";
+import axios from "axios";
+
 import {
   Container,
   Row,
@@ -10,7 +11,7 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import { useEffect } from "react";
-import { Plus, Pencil, Download } from "react-bootstrap-icons";
+import { Plus, Pencil } from "react-bootstrap-icons";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import {
   deleteJobAction,
@@ -79,7 +80,30 @@ const Experience = () => {
   };
   let prof = useAppSelector((state) => state.myProfile.results);
   let userID = prof._id;
+  const [csvData, setCsvData] = useState(null);
+  function handleDownload() {
+    if (csvData) {
+      const blob = new Blob([csvData], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "data.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
 
+  function handleFetch() {
+    axios
+      .get(`${process.env.REACT_APP_BE_URL}/users/${userID}/experiences/csv`)
+      .then((response) => {
+        setCsvData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   const handleSubmit2 = async (
     e: React.MouseEvent<HTMLElement, MouseEvent>
   ) => {
@@ -119,22 +143,6 @@ const Experience = () => {
         console.log(job);
       } else {
         console.log("Try harder!");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const downloadExperience = async () => {
-    try {
-      console.log(userID);
-      let response = await fetch(
-        `${process.env.REACT_APP_BE_URL}/users/${userID}/experiences/csv`
-      );
-
-      if (response.ok) {
-        console.log("yay");
-      } else {
-        console.log("Error");
       }
     } catch (error) {
       console.log(error);
@@ -425,9 +433,29 @@ const Experience = () => {
               </Modal>
             </div>
 
-            <div className="icons-bg-hover">
+            <div>
               {" "}
-              <Download size={27} onClick={downloadExperience} />
+              <div className="d-flex" style={{ gap: "5px" }}>
+                <Button
+                  style={{ fontSize: "8px" }}
+                  onClick={handleFetch}
+                  variant="outline-dark"
+                  className="btn-small"
+                >
+                  Fetch CSV
+                </Button>
+
+                {csvData && (
+                  <Button
+                    style={{ fontSize: "8px" }}
+                    onClick={handleDownload}
+                    variant="outline-dark"
+                    className="btn-small"
+                  >
+                    Download CSV
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -457,6 +485,23 @@ const Experience = () => {
                         style={{ paddingInline: "10px" }}
                       >
                         {ex.company}
+                      </p>
+                      {/* 
+                        {format(parseISO(ex.startDate), "MMMM, yyyy")} -{" "}
+                        {ex.endDate === null || ex.endDate === undefined
+                          ? "Present"
+                          : format(parseISO(ex.endDate), "MMMM, yyyy")}
+                       */}
+                      <p
+                        className="place mb-0"
+                        style={{ paddingInline: "10px" }}
+                      >
+                        {ex.startDate}-{" "}
+                        {ex.endDate === null ||
+                        ex.endDate === undefined ||
+                        ex.endDate === ""
+                          ? "Present"
+                          : ex.endDate}
                       </p>
 
                       <p
