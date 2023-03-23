@@ -1,4 +1,5 @@
 import React from "react";
+import { CSVLink } from "react-csv";
 import {
   Container,
   Row,
@@ -9,7 +10,7 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import { useEffect } from "react";
-import { Plus, Pencil } from "react-bootstrap-icons";
+import { Plus, Pencil, Download } from "react-bootstrap-icons";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import {
   deleteJobAction,
@@ -110,10 +111,6 @@ const Experience = () => {
         {
           method: "POST",
           body: formData,
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzNmZmNTgzODFmYzAwMTNmZmZhZGYiLCJpYXQiOjE2NzY4OTgyOTQsImV4cCI6MTY3ODEwNzg5NH0.n_FTGhlX9c6j23fCYIPFM6lg70LgdPtYXQ8thi09Ges",
-          },
         }
       );
       console.log(response);
@@ -122,6 +119,22 @@ const Experience = () => {
         console.log(job);
       } else {
         console.log("Try harder!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const downloadExperience = async () => {
+    try {
+      console.log(userID);
+      let response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/users/${userID}/experiences/csv`
+      );
+
+      if (response.ok) {
+        console.log("yay");
+      } else {
+        console.log("Error");
       }
     } catch (error) {
       console.log(error);
@@ -410,6 +423,11 @@ const Experience = () => {
                   </Button>
                 </Modal.Footer>
               </Modal>
+            </div>
+
+            <div className="icons-bg-hover">
+              {" "}
+              <Download size={27} onClick={downloadExperience} />
             </div>
           </div>
 
