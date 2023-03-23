@@ -43,7 +43,7 @@ const PostCard = (props: IProps) => {
 
   const [likes, setLikes] = useState({ post: {}, numberOfLikes: Number });
   const [changed, setChanged] = useState(false);
-  // const [isLikedd, setIsLikedd] = useState(false);
+
   const [comment, setComment] = useState({ comm: "" });
 
   const handleClose = () => setShow(false);
@@ -68,24 +68,6 @@ const PostCard = (props: IProps) => {
   const isLiked = useAppSelector((state) => state.likes.results);
   const dispatch = useAppDispatch();
   const [file, setFile] = useState<File | null>(null);
-  // const handleLike = async (singlePost) => {
-  //     try {
-  //       const res = await fetch(`${process.env.REACT_APP_BE_URL}/posts/${singlePost._id}/like`, {
-  //         method: "PUT",
-  //         body: JSON.stringify({_id: profileDataID}),
-  //         headers: {"Content-Type": "application/json"}
-  //       })
-  //       if (res.ok) {
-  //         const data = await res.json()
-  //         console.log(data)
-  //         setIsLiked(data.isLiked)
-  //         setLikes(data.totalLikes)
-  //         dispatch(getAllPosts())
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   };
 
   const addToLikesAction = async (like: any, userId: string) => {
     try {
