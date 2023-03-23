@@ -81,7 +81,7 @@ const Experience = () => {
   let prof = useAppSelector((state) => state.myProfile.results);
   let userID = prof._id;
   const [csvData, setCsvData] = useState(null);
-  function handleDownload() {
+  const handleDownload = () => {
     if (csvData) {
       const blob = new Blob([csvData], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
@@ -92,9 +92,9 @@ const Experience = () => {
       link.click();
       document.body.removeChild(link);
     }
-  }
+  };
 
-  function handleFetch() {
+  const handleFetch = () => {
     axios
       .get(`${process.env.REACT_APP_BE_URL}/users/${userID}/experiences/csv`)
       .then((response) => {
@@ -103,7 +103,7 @@ const Experience = () => {
       .catch((error) => {
         console.error(error);
       });
-  }
+  };
   const handleSubmit2 = async (
     e: React.MouseEvent<HTMLElement, MouseEvent>
   ) => {
