@@ -44,11 +44,37 @@ const PostCard = (props: IProps) => {
   const [likes, setLikes] = useState({ post: {}, numberOfLikes: Number });
   const [changed, setChanged] = useState(false);
   // const [isLikedd, setIsLikedd] = useState(false);
-  const [comment, setComment] = useState({ comm: "" });
+  const [comment, setComment] = useState({ comm: "", user: "" });
 
   const handleClose = () => setShow(false);
-  const submitComment = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.preventDefault();
+  const submitComment = async (id: String) => {
+
+    try {
+     
+        let response = await fetch(
+          `${process.env.REACT_APP_BE_URL}/posts/${id}/comments`,
+          {
+            method: "POST",
+            body: JSON.stringify({ comment: comment.comm, user: prof._id }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          console.log("posted");
+          let data = await response.json();
+
+          return data;
+        } else {
+          console.log("Error");
+        }
+      }
+     catch (error) {
+      console.log(error);
+    }
+
   };
 
   const handleShow = (id: string) => {
@@ -353,7 +379,10 @@ const PostCard = (props: IProps) => {
                   <Button
                     variant="primary"
                     type="submit"
-                    onClick={submitComment}
+                    onClick={(e: React.MouseEvent<HTMLElement, MouseEvent> ) => {
+                      e.preventDefault();
+                      submitComment(singlePost._id);
+                    }}
                   >
                     Submit
                   </Button>
