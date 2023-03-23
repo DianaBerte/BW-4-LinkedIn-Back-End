@@ -216,7 +216,6 @@ const PostCard = (props: IProps) => {
           .reverse()
           .map((singlePost) => (
             <>
-              {console.log(singlePost)}
               <Col className="mt-3 sub-sections" xs={12} key={singlePost._id}>
                 <div className="d-flex justify-content-between mt-3">
                   <div className="d-flex">
