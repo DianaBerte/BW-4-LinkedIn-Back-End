@@ -22,7 +22,7 @@ const SearchProfile = () => {
     (state) => state.uniqueProfiles.results
   );
   const [csvData, setCsvData] = useState(null);
-  function handleDownload() {
+  const handleDownload = () => {
     if (csvData) {
       const blob = new Blob([csvData], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
@@ -33,9 +33,9 @@ const SearchProfile = () => {
       link.click();
       document.body.removeChild(link);
     }
-  }
+  };
 
-  function handleFetch() {
+  const handleFetch = () => {
     axios
       .get(`${process.env.REACT_APP_BE_URL}/users/${params.id}/experiences/csv`)
       .then((response) => {
@@ -44,7 +44,7 @@ const SearchProfile = () => {
       .catch((error) => {
         console.error(error);
       });
-  }
+  };
 
   const uniqueProfile = () => {
     const uniqueProfilesArray: IProfile[] = [];
