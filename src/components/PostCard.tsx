@@ -8,9 +8,9 @@ import {
   ListGroup,
   ListGroupItem,
 } from "react-bootstrap";
-import { ChatRightText, Share, ThreeDots } from "react-bootstrap-icons";
+import { ChatRightText, Pencil, Share, ThreeDots } from "react-bootstrap-icons";
 import { useEffect } from "react";
-
+import { IProfile } from "../interfaces/IProfile";
 import {
   // addToLikesAction,
   editPostAction,
@@ -18,12 +18,13 @@ import {
   // removeFromLikesAction,
 } from "../actions";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
-
+import "../css/comments.css"
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp as liked } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp as disliked } from "@fortawesome/free-regular-svg-icons";
+import { Trash } from "react-bootstrap-icons";
 
 import { useState } from "react";
 import { deletePost } from "../actions";
@@ -35,18 +36,65 @@ interface IProps {
   addedNewPost: React.Dispatch<React.SetStateAction<boolean>>;
 }
 let idToEdit: string;
+let commentToEdit: String;
+let posttoedit: String;
 const PostCard = (props: IProps) => {
+  const [show2, setShow2] = useState(false);
   const [show, setShow] = useState(false);
   const [editPost, setEditPost] = useState({
     text: "",
   });
-
+  // let foundUser;
   const [likes, setLikes] = useState({ post: {}, numberOfLikes: Number });
   const [changed, setChanged] = useState(false);
-  // const [isLikedd, setIsLikedd] = useState(false);
+
   const [comment, setComment] = useState({ comm: "", user: "" });
 
   const handleClose = () => setShow(false);
+
+  const deleteComment = async (commentId: String, postId: String) => {
+    try {
+      let response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/posts/${postId}/comments/${commentId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        console.log("deleted");
+        dispatch(fetchPostsAction());
+      } else {
+        alert("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const editComment = async (commentId: String, postId: String) => {
+    try {
+      console.log(postId, commentToEdit);
+      let response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/posts/${posttoedit}/comments/${commentToEdit}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ comment: comment.comm }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        // let data = await response.json();
+        console.log("edited");
+        dispatch(fetchPostsAction());
+      } else {
+        alert("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const submitComment = async (id: String) => {
     try {
       let response = await fetch(
@@ -73,7 +121,12 @@ const PostCard = (props: IProps) => {
       console.log(error);
     }
   };
-
+  const handleShow2 = (commentid: String, postid: String) => {
+    setShow2(true);
+    commentToEdit = commentid;
+    posttoedit = postid;
+  };
+  const handleClose2 = () => setShow2(false);
   const handleShow = (id: string) => {
     const found = post.find((p: IPost) => p._id === id);
 
@@ -82,34 +135,23 @@ const PostCard = (props: IProps) => {
     idToEdit = id;
   };
   let prof = useAppSelector((state) => state.myProfile.results);
-
+  // const [a, seta] = useState(null);
   const post = useAppSelector((state) => state.posts.results);
   const allUsers = useAppSelector((state) => state.allProfiles.results);
   console.log(allUsers);
+  // const checkUser = async (userWhoCommented: String) => {
+  //   const person = await allUsers.find(
+  //     (person: IProfile) => person._id === userWhoCommented
+  //   );
+  //   console.log("per", person);
+
+  // };
 
   const [numberOfLikes, setNumberOfLikes] = useState(0);
 
   const isLiked = useAppSelector((state) => state.likes.results);
   const dispatch = useAppDispatch();
   const [file, setFile] = useState<File | null>(null);
-  // const handleLike = async (singlePost) => {
-  //     try {
-  //       const res = await fetch(`${process.env.REACT_APP_BE_URL}/posts/${singlePost._id}/like`, {
-  //         method: "PUT",
-  //         body: JSON.stringify({_id: profileDataID}),
-  //         headers: {"Content-Type": "application/json"}
-  //       })
-  //       if (res.ok) {
-  //         const data = await res.json()
-  //         console.log(data)
-  //         setIsLiked(data.isLiked)
-  //         setLikes(data.totalLikes)
-  //         dispatch(getAllPosts())
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   };
 
   const addToLikesAction = async (like: any, userId: string) => {
     try {
@@ -387,8 +429,93 @@ const PostCard = (props: IProps) => {
 
                 <ListGroup>
                   {singlePost.comments.map(
-                    (c: { _id: String; comment: String }) => (
-                      <ListGroupItem>{c.comment}</ListGroupItem>
+                    (c: {
+                      _id: String;
+                      comment: String;
+                      user: { name: String; surname: String; _id: String };
+                    }) => (
+                      <>
+                        <ListGroupItem className="user-comment">
+                         {<span className="comment-user-name">{c.user.name} {c.user.surname}: </span>}   {<span className="comment-text">{c.comment} </span>}
+                          {c.user._id === prof._id ? (
+                            <span className="ml-5">
+                              <Button
+                                className="comment-buttons"
+                                variant="outline-dark"
+                                onClick={(
+                                  e: React.MouseEvent<HTMLElement, MouseEvent>
+                                ) => {
+                                  e.preventDefault();
+                                  deleteComment(c._id, singlePost._id);
+                                }}
+                              >
+                                <Trash />
+                              </Button>
+                              <Button
+                               className="comment-buttons"
+                                variant="outline-dark"
+                                onClick={(
+                                  e: React.MouseEvent<HTMLElement, MouseEvent>
+                                ) => {
+                                  e.preventDefault();
+                                  handleShow2(c._id, singlePost._id);
+                                }}
+                              >
+                                <Pencil />
+                              </Button>
+                              <Modal
+                                show={show2}
+                                onHide={handleClose2}
+                                scrollable
+                                className="add-exp-modal"
+                              >
+                                <Modal.Header closeButton>
+                                  <Modal.Title>Edit comment</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                  <Form>
+                                    <Form.Group>
+                                      <Form.Label className="place">
+                                        comment
+                                      </Form.Label>
+                                      <Form.Control
+                                        type="text"
+                                        className="inputs"
+                                        value={comment.comm}
+                                        onChange={(e) => {
+                                          setComment({
+                                            ...comment,
+                                            comm: e.target.value,
+                                          });
+                                        }}
+                                      />
+                                    </Form.Group>
+                                  </Form>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                  <div>
+                                    <Button
+                                      style={{ fontSize: "14px" }}
+                                      variant="primary"
+                                      className="rounded-pill py-1 px-2"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+
+                                        editComment(c._id, singlePost._id);
+                                        handleClose2();
+                                      }}
+                                    >
+                                      Save
+                                    </Button>
+                                  </div>
+                                </Modal.Footer>
+                              </Modal>
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                        </ListGroupItem>
+                      </>
                     )
                   )}
                 </ListGroup>
