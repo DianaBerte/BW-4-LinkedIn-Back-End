@@ -1,6 +1,24 @@
 .user-comment{
 margin-bottom: 1rem;
 margin-top: 1rem;
+display: inline-block;
+}
+.list-group-item+.list-group-item {
+  border-top-width: 0.01rem;
+  border-radius: 0.25rem;
+}
+.list-group-item:first-child {
+  border-radius: 0.25rem;
+}
+
+.comment-buttons{
+  font-size: 0.7rem;
+  padding: 0.18rem 0.3rem;
+  margin-left: 0.6rem;}
+  
+.user-comment{
+margin-bottom: 1rem;
+margin-top: 1rem;
 display: flex;
 
 
@@ -23,6 +41,20 @@ display: flex;
   margin-left: 0.6rem;
 
 }
+
+.comment-text{
+  font-weight: 200;
+  margin-left: 0.3rem;
+  font-size: 14px;
+}
+
+.comment-user-name{
+  line-height: 24px;
+  font-weight: 600;
+  font-size: 15px;
+
+}
+  
 
 .comment-text{
   font-weight: 200;
