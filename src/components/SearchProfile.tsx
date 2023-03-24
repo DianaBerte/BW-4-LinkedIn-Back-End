@@ -280,7 +280,7 @@ const SearchProfile = () => {
                         variant="outline-dark"
                         className="btn-small"
                       >
-                        Fetch CSV
+                        Need a copy of experiences?
                       </Button>
 
                       {csvData && (
@@ -334,7 +334,7 @@ const SearchProfile = () => {
                                 >
                                   {ex.company}
                                 </p>
-                                <p
+                                {/*<p
                                   className="place mb-0"
                                   style={{ paddingInline: "10px" }}
                                 >
@@ -353,7 +353,7 @@ const SearchProfile = () => {
                                           "MMMM, yyyy"
                                         )}
                                   </>
-                                </p>
+                                      </p> */}
                                 <p
                                   className="place mb-0"
                                   style={{ paddingInline: "10px" }}
