@@ -437,17 +437,17 @@ const Experience = () => {
               {" "}
               <div className="d-flex" style={{ gap: "5px" }}>
                 <Button
-                  style={{ fontSize: "8px" }}
+                  style={{ fontSize: "12px" }}
                   onClick={handleFetch}
                   variant="outline-dark"
                   className="btn-small"
                 >
-                  Fetch CSV
+                  Need a copy of experiences?
                 </Button>
 
                 {csvData && (
                   <Button
-                    style={{ fontSize: "8px" }}
+                    style={{ fontSize: "12px" }}
                     onClick={handleDownload}
                     variant="outline-dark"
                     className="btn-small"

@@ -1,21 +1,27 @@
 .user-comment{
 margin-bottom: 1rem;
 margin-top: 1rem;
-display: inline-block;
+display: flex;
+
+
 }
 .list-group-item+.list-group-item {
   border-top-width: 0.01rem;
   border-radius: 0.25rem;
+  align-items: baseline;
+  width: 100%;
 }
 .list-group-item:first-child {
   border-radius: 0.25rem;
+  align-items: baseline;
+  width: 100%;
 }
 
 .comment-buttons{
   font-size: 0.7rem;
   padding: 0.18rem 0.3rem;
   margin-left: 0.6rem;
-  
+
 }
 
 .comment-text{
