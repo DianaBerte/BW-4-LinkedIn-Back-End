@@ -18,7 +18,7 @@ import {
   // removeFromLikesAction,
 } from "../actions";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
-
+import "../css/comments.css"
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -435,11 +435,12 @@ const PostCard = (props: IProps) => {
                       user: { name: String; surname: String; _id: String };
                     }) => (
                       <>
-                        <ListGroupItem>
-                          {c.user.name} {c.user.surname}-{c.comment}
+                        <ListGroupItem className="user-comment">
+                         {<span className="comment-user-name">{c.user.name} {c.user.surname}: </span>}   {<span className="comment-text">{c.comment} </span>}
                           {c.user._id === prof._id ? (
                             <span className="ml-5">
                               <Button
+                                className="comment-buttons"
                                 variant="outline-dark"
                                 onClick={(
                                   e: React.MouseEvent<HTMLElement, MouseEvent>
@@ -451,6 +452,7 @@ const PostCard = (props: IProps) => {
                                 <Trash />
                               </Button>
                               <Button
+                               className="comment-buttons"
                                 variant="outline-dark"
                                 onClick={(
                                   e: React.MouseEvent<HTMLElement, MouseEvent>
