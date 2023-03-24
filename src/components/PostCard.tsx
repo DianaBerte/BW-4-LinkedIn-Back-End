@@ -415,7 +415,7 @@ const PostCard = (props: IProps) => {
                     (c: {
                       _id: String;
                       comment: String;
-                      user: { name: String; surname: String };
+                      user: { name: String; surname: String; _id: String };
                     }) => (
                       <>
                         {/* {
@@ -428,27 +428,31 @@ const PostCard = (props: IProps) => {
                         {/* {checkUser(c.user)} */}
                         <ListGroupItem>
                           {c.user.name} {c.user.surname}-{c.comment}
-                          <span className="ml-5">
-                            <Button
-                              variant="outline-dark"
-                              onClick={(
-                                e: React.MouseEvent<HTMLElement, MouseEvent>
-                              ) => {
-                                e.preventDefault();
-                                deleteComment(c._id, singlePost._id);
-                              }}
-                            >
-                              <Trash />
-                            </Button>
-                            <Button
-                              variant="outline-dark"
-                              onClick={() => {
-                                handleShow2(c._id, singlePost._id);
-                              }}
-                            >
-                              <Pencil />
-                            </Button>
-                          </span>
+                          {c.user._id === prof._id ? (
+                            <span className="ml-5">
+                              <Button
+                                variant="outline-dark"
+                                onClick={(
+                                  e: React.MouseEvent<HTMLElement, MouseEvent>
+                                ) => {
+                                  e.preventDefault();
+                                  deleteComment(c._id, singlePost._id);
+                                }}
+                              >
+                                <Trash />
+                              </Button>
+                              <Button
+                                variant="outline-dark"
+                                onClick={() => {
+                                  handleShow2(c._id, singlePost._id);
+                                }}
+                              >
+                                <Pencil />
+                              </Button>
+                            </span>
+                          ) : (
+                            ""
+                          )}
                           <Modal
                             show={show2}
                             onHide={handleClose2}
