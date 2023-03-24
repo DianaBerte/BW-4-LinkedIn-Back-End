@@ -14,7 +14,7 @@ export const SEARCH_PROFILE = "SEARCH_PROFILE";
 export const fetchAllProfilesAction = () => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/users/`);
 
       if (response.ok) {
         let profiles = await response.json();
@@ -35,7 +35,7 @@ export const fetchAllProfilesAction = () => {
 export const fetchExperienceAction = () => {
   return async (dispatch: Dispatch) => {
     try {
-      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users/`);
       if (res.ok) {
         let users = await res.json();
 
@@ -73,7 +73,7 @@ export const postJobAction = (job: {
 }) => {
   return async (dispatch: Dispatch) => {
     try {
-      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users/`);
       if (res.ok) {
         let users = await res.json();
 
@@ -108,7 +108,7 @@ export const postJobAction = (job: {
 export const deleteJobAction = (id: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users/`);
       if (res.ok) {
         let users = await res.json();
 
@@ -136,7 +136,7 @@ export const deleteJobAction = (id: string) => {
 export const fetchMyProfileAction = () => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/users/`);
       if (response.ok) {
         let myProfile = (await response.json())[0];
 
@@ -171,7 +171,7 @@ export const editJobAction = (
 ) => {
   return async (dispatch: Dispatch) => {
     try {
-      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users/`);
       if (res.ok) {
         let users = await res.json();
 
@@ -209,7 +209,7 @@ export const editMyProfileAction = (editProfile: {
 }) => {
   return async (dispatch: Dispatch) => {
     try {
-      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      let res = await fetch(`${process.env.REACT_APP_BE_URL}/users/`);
       if (res.ok) {
         let users = await res.json();
 
@@ -239,7 +239,7 @@ export const editMyProfileAction = (editProfile: {
 export const editBioAction = (about: { bio: string }) => {
   return async (dispatch: Dispatch) => {
     try {
-      let response = await fetch(`${process.env.REACT_APP_BE_URL}/users`);
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/users/`);
       if (response.ok) {
         let myProfile = (await response.json())[0];
         let res = await fetch(
