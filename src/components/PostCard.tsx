@@ -439,7 +439,7 @@ const PostCard = (props: IProps) => {
                          {<span className="comment-user-name">{c.user.name} {c.user.surname}: </span>}   {<span className="comment-text">{c.comment} </span>}
                           {c.user._id === prof._id ? (
                             <span className="ml-5">
-                              <Button
+                             {<div className="button-div"> <Button 
                                 className="comment-buttons"
                                 variant="outline-dark"
                                 onClick={(
@@ -462,7 +462,7 @@ const PostCard = (props: IProps) => {
                                 }}
                               >
                                 <Pencil />
-                              </Button>
+                              </Button></div>}
                               <Modal
                                 show={show2}
                                 onHide={handleClose2}
