@@ -36,6 +36,8 @@ interface IProps {
   addedNewPost: React.Dispatch<React.SetStateAction<boolean>>;
 }
 let idToEdit: string;
+let commentToEdit: String;
+let posttoedit: String;
 const PostCard = (props: IProps) => {
   const [show2, setShow2] = useState(false);
   const [show, setShow] = useState(false);
@@ -47,19 +49,9 @@ const PostCard = (props: IProps) => {
   const [changed, setChanged] = useState(false);
 
   const [comment, setComment] = useState({ comm: "", user: "" });
-  const handleSubmit2 = async (
-    e: React.MouseEvent<HTMLElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    setChanged(true);
-
-    // await dispatch(editJobAction(job, expToEdit));
-
-    handleClose2();
-  };
 
   const handleClose = () => setShow(false);
-  const editComment = async (commentId: String, postId: String) => {};
+
   const deleteComment = async (commentId: String, postId: String) => {
     try {
       let response = await fetch(
@@ -71,6 +63,30 @@ const PostCard = (props: IProps) => {
 
       if (response.ok) {
         console.log("deleted");
+        dispatch(fetchPostsAction());
+      } else {
+        alert("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const editComment = async (commentId: String, postId: String) => {
+    try {
+      console.log(postId, commentToEdit);
+      let response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/posts/${posttoedit}/comments/${commentToEdit}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ comment: comment.comm }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        // let data = await response.json();
+        console.log("edited");
         dispatch(fetchPostsAction());
       } else {
         alert("Error");
@@ -107,7 +123,8 @@ const PostCard = (props: IProps) => {
   };
   const handleShow2 = (commentid: String, postid: String) => {
     setShow2(true);
-    // editJob(id);
+    commentToEdit = commentid;
+    posttoedit = postid;
   };
   const handleClose2 = () => setShow2(false);
   const handleShow = (id: string) => {
@@ -418,14 +435,6 @@ const PostCard = (props: IProps) => {
                       user: { name: String; surname: String; _id: String };
                     }) => (
                       <>
-                        {/* {
-                          (foundUser = allUsers.find(
-                            (u: IProfile) => u._id === c.user
-                          ))
-                        }
-                        {console.log(foundUser)} */}
-
-                        {/* {checkUser(c.user)} */}
                         <ListGroupItem>
                           {c.user.name} {c.user.surname}-{c.comment}
                           {c.user._id === prof._id ? (
@@ -443,61 +452,66 @@ const PostCard = (props: IProps) => {
                               </Button>
                               <Button
                                 variant="outline-dark"
-                                onClick={() => {
+                                onClick={(
+                                  e: React.MouseEvent<HTMLElement, MouseEvent>
+                                ) => {
+                                  e.preventDefault();
                                   handleShow2(c._id, singlePost._id);
                                 }}
                               >
                                 <Pencil />
                               </Button>
+                              <Modal
+                                show={show2}
+                                onHide={handleClose2}
+                                scrollable
+                                className="add-exp-modal"
+                              >
+                                <Modal.Header closeButton>
+                                  <Modal.Title>Edit comment</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                  <Form>
+                                    <Form.Group>
+                                      <Form.Label className="place">
+                                        comment
+                                      </Form.Label>
+                                      <Form.Control
+                                        type="text"
+                                        className="inputs"
+                                        value={comment.comm}
+                                        onChange={(e) => {
+                                          setComment({
+                                            ...comment,
+                                            comm: e.target.value,
+                                          });
+                                        }}
+                                      />
+                                    </Form.Group>
+                                  </Form>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                  <div>
+                                    <Button
+                                      style={{ fontSize: "14px" }}
+                                      variant="primary"
+                                      className="rounded-pill py-1 px-2"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+
+                                        editComment(c._id, singlePost._id);
+                                        handleClose2();
+                                      }}
+                                    >
+                                      Save
+                                    </Button>
+                                  </div>
+                                </Modal.Footer>
+                              </Modal>
                             </span>
                           ) : (
                             ""
                           )}
-                          <Modal
-                            show={show2}
-                            onHide={handleClose2}
-                            scrollable
-                            className="add-exp-modal"
-                          >
-                            <Modal.Header closeButton>
-                              <Modal.Title>Edit comment</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                              <Form>
-                                <Form.Group>
-                                  <Form.Label className="place">
-                                    comment
-                                  </Form.Label>
-                                  <Form.Control
-                                    type="text"
-                                    className="inputs"
-                                    value={comment.comm}
-                                    onChange={(e) => {
-                                      setComment({
-                                        ...comment,
-                                        comm: e.target.value,
-                                      });
-                                    }}
-                                  />
-                                </Form.Group>
-                              </Form>
-                            </Modal.Body>
-                            <Modal.Footer>
-                              <div>
-                                <Button
-                                  style={{ fontSize: "14px" }}
-                                  variant="primary"
-                                  className="rounded-pill py-1 px-2"
-                                  onClick={(e) => {
-                                    handleSubmit2(e);
-                                    setChanged(true);
-                                  }}
-                                >
-                                  Save
-                                </Button>
-                              </div>
-                            </Modal.Footer>
-                          </Modal>
                         </ListGroupItem>
                       </>
                     )
